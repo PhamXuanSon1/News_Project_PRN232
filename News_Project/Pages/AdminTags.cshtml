@@ -1,0 +1,50 @@
+@page
+@model News_Project.Pages.AdminTagsModel
+@{
+    Layout = "~/Pages/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Quản lý tag";
+}
+
+<h1 class="text-2xl font-bold mb-6 text-blue-700">Quản lý tag</h1>
+<partial name="_AlertPartial" />
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="mb-4 text-green-600">@Model.Message</div>
+}
+
+<form method="post" class="mb-6 flex gap-2">
+    <input name="name" class="border rounded px-3 py-2" placeholder="Tên tag" />
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Thêm</button>
+</form>
+
+@if (Model.Tags?.Any() == true)
+{
+    <table class="min-w-full bg-white rounded-lg shadow">
+        <thead>
+            <tr>
+                <th class="px-4 py-2">ID</th>
+                <th class="px-4 py-2">Tên</th>
+                <th class="px-4 py-2">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var tag in Model.Tags)
+        {
+            <tr>
+                <td class="border px-4 py-2">@tag.TagId</td>
+                <td class="border px-4 py-2">@tag.Name</td>
+                <td class="border px-4 py-2">
+                    <form method="post" asp-page-handler="Delete" asp-route-tagId="@tag.TagId" class="inline">
+                        <button type="submit" class="text-red-600 text-xs hover:underline bg-transparent border-none">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Không có tag nào.</p>
+} 

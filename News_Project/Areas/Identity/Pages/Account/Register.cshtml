@@ -1,0 +1,39 @@
+@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="min-h-screen flex items-center justify-center" style="background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-10 flex flex-col items-center">
+        <h1 class="text-3xl font-bold mb-8">Sign Up</h1>
+        <form id="registerForm" method="post" class="w-full space-y-6">
+            <div>
+                <label asp-for="Input.Email" class="block text-gray-700 font-semibold mb-1">Email</label>
+                <div class="relative">
+                    <input asp-for="Input.Email" class="w-full border border-gray-300 rounded-lg px-10 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500" autocomplete="username" aria-required="true" placeholder="Type your email" />
+                </div>
+                <span asp-validation-for="Input.Email" class="text-red-600 text-sm"></span>
+            </div>
+            <div>
+                <label asp-for="Input.Password" class="block text-gray-700 font-semibold mb-1">Password</label>
+                <div class="relative">
+                    <input asp-for="Input.Password" class="w-full border border-gray-300 rounded-lg px-10 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500" autocomplete="new-password" aria-required="true" placeholder="Type your password" />
+                </div>
+                <span asp-validation-for="Input.Password" class="text-red-600 text-sm"></span>
+            </div>
+            <div>
+                <label asp-for="Input.ConfirmPassword" class="block text-gray-700 font-semibold mb-1">Confirm Password</label>
+                <div class="relative">
+                    <input asp-for="Input.ConfirmPassword" class="w-full border border-gray-300 rounded-lg px-10 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500" autocomplete="new-password" aria-required="true" placeholder="Confirm your password" />
+                </div>
+                <span asp-validation-for="Input.ConfirmPassword" class="text-red-600 text-sm"></span>
+            </div>
+            <button type="submit" class="w-full py-3 rounded-lg text-white font-bold text-lg" style="background: linear-gradient(90deg, #6a82fb 0%, #fc5c7d 100%);">Register</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+} 

@@ -1,0 +1,63 @@
+@page "{id:int}"
+@model News_Project.Pages.CategoryModel
+@{
+    ViewData["Title"] = Model.Category?.Name ?? "Chuyên mục";
+}
+
+<div class="container mx-auto px-4 py-12 max-w-7xl">
+    <h1 class="text-3xl font-bold mb-8 text-blue-700">Chuyên mục: @Model.Category?.Name</h1>
+    @if (Model.NewsList != null && Model.NewsList.Any())
+    {
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Tin nổi bật lớn -->
+            <div class="lg:col-span-2 space-y-6">
+                @{
+                    var mainNews = Model.NewsList.First();
+                    var mainImg = mainNews.Media?.FirstOrDefault()?.Url ?? "https://placehold.co/600x300?text=No+Image";
+                }
+                <div class="bg-white rounded-xl shadow-lg p-6 transition-transform duration-300 hover:scale-[1.02]">
+                    <img src="@mainImg" alt="Main News" class="w-full h-80 object-cover rounded-lg mb-6" />
+                    <div class="flex justify-between items-center text-sm text-gray-500 mb-4">
+                        <span>@mainNews.PublishedAt.ToString("dd/MM/yyyy HH:mm")</span>
+                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded">@Model.Category?.Name</span>
+                    </div>
+                    <h2 class="text-3xl font-bold mb-4 text-gray-900 hover:text-blue-600 transition-colors duration-200 line-clamp-2">@mainNews.Title</h2>
+                    <p class="text-gray-600 mb-4 leading-relaxed line-clamp-3 prose prose-lg">@mainNews.Summary</p>
+                    <a class="inline-block text-blue-600 font-semibold hover:text-blue-800 transition-colors duration-200" asp-page="/NewsDetail" asp-route-id="@mainNews.NewsId">Xem chi tiết</a>
+                </div>
+                <!-- Tin phụ bên phải -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    @foreach (var news in Model.NewsList.Skip(1).Take(3))
+                    {
+                        var img = news.Media?.FirstOrDefault()?.Url ?? "https://placehold.co/400x200?text=No+Image";
+                        <div class="bg-white rounded-xl shadow-lg p-5 transition-transform duration-300 hover:scale-[1.02]">
+                            <img src="@img" alt="News" class="w-full h-48 object-cover rounded-lg mb-4" />
+                            <h3 class="font-semibold text-lg mb-3 text-gray-900 hover:text-blue-600 transition-colors duration-200 line-clamp-2">@news.Title</h3>
+                            <p class="text-sm text-gray-500 mb-3">@news.PublishedAt.ToString("dd/MM/yyyy HH:mm") | @news.Author?.UserName</p>
+                            <p class="text-gray-600 text-sm mb-4 leading-relaxed line-clamp-2 prose prose-sm">@news.Summary</p>
+                            <a class="text-blue-600 font-semibold hover:text-blue-800 text-sm transition-colors duration-200" asp-page="/NewsDetail" asp-route-id="@news.NewsId">Xem chi tiết</a>
+                        </div>
+                    }
+                </div>
+            </div>
+            <!-- Sidebar phải: Top 10 News trong chuyên mục -->
+            <div class="space-y-6">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="font-bold text-xl mb-4 text-gray-900">TOP 10 TIN NỔI BẬT</h3>
+                    <ol class="list-decimal list-inside space-y-3 text-gray-800">
+                        @foreach (var news in Model.NewsList.OrderByDescending(n => n.Views).Take(10))
+                        {
+                            <li>
+                                <a asp-page="/NewsDetail" asp-route-id="@news.NewsId" class="hover:text-blue-600 transition-colors duration-200 line-clamp-1">@news.Title</a>
+                            </li>
+                        }
+                    </ol>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center text-gray-600 text-xl py-12">Chưa có tin tức nào trong chuyên mục này.</div>
+    }
+</div> 

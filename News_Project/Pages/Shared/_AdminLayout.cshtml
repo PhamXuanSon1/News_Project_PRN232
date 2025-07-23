@@ -1,0 +1,47 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<News_Project.Models.User> SignInManager
+@inject UserManager<News_Project.Models.User> UserManager
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    @RenderSection("Styles", required: false)
+</head>
+<body class="bg-gray-100 min-h-screen flex">
+    <!-- Sidebar -->
+    <nav class="w-64 bg-gradient-to-b from-blue-900 to-gray-800 text-white min-h-screen p-6 flex flex-col justify-between">
+        <div>
+            <div class="mb-10 flex items-center gap-2">
+                <span class="text-2xl font-bold">Admin Panel</span>
+            </div>
+            <ul class="space-y-4 text-base">
+                <li><a href="/AdminStats" class="hover:text-blue-300 font-semibold">Dashboard</a></li>
+                <li><a href="/AdminUsers" class="hover:text-blue-300">Quản lý người dùng</a></li>
+                <li><a href="/AdminNews" class="hover:text-blue-300">Quản lý bài viết</a></li>
+                <li><a href="/AdminCategories" class="hover:text-blue-300">Quản lý chuyên mục</a></li>
+                <li><a href="/AdminTags" class="hover:text-blue-300">Quản lý tag</a></li>
+            </ul>
+        </div>
+        <div class="mt-10">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="mb-2 text-sm">👤 <span class="font-semibold">@User.Identity.Name</span></div>
+                <form method="post" asp-area="Identity" asp-page="/Account/Logout" class="inline">
+                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 w-full">Đăng xuất</button>
+                </form>
+            }
+        </div>
+    </nav>
+    <!-- Main content -->
+    <main class="flex-1 p-8">
+        <header class="mb-8">
+            <h1 class="text-2xl font-bold text-blue-900">@ViewData["Title"]</h1>
+        </header>
+        @RenderBody()
+    </main>
+    @RenderSection("Scripts", required: false)
+</body>
+</html> 

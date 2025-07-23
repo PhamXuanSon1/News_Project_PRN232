@@ -1,0 +1,33 @@
+@page
+@model News_Project.Pages.CreateNewsModel
+@{
+    ViewData["Title"] = "Đăng bài viết mới";
+}
+
+<h1 class="text-2xl font-bold mb-6 text-blue-700">Đăng bài viết mới</h1>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="mb-4 text-green-600">@Model.Message</div>
+}
+
+<form method="post" class="bg-white rounded-lg shadow p-6 max-w-xl mx-auto flex flex-col gap-4">
+    <input asp-for="Input.Title" class="border rounded px-3 py-2" placeholder="Tiêu đề" />
+    <span asp-validation-for="Input.Title" class="text-red-600 text-sm"></span>
+
+    <textarea asp-for="Input.Content" class="border rounded px-3 py-2" placeholder="Nội dung" rows="6"></textarea>
+    <span asp-validation-for="Input.Content" class="text-red-600 text-sm"></span>
+
+    <input asp-for="Input.Summary" class="border rounded px-3 py-2" placeholder="Tóm tắt" />
+    <span asp-validation-for="Input.Summary" class="text-red-600 text-sm"></span>
+
+    <input asp-for="Input.ImageUrl" class="border rounded px-3 py-2" placeholder="URL ảnh đại diện (bắt buộc)" />
+    <span asp-validation-for="Input.ImageUrl" class="text-red-600 text-sm"></span>
+
+    <select asp-for="Input.CategoryId" asp-items="Model.Categories" class="border rounded px-3 py-2">
+        <option value="">-- Chọn chuyên mục --</option>
+    </select>
+    <span asp-validation-for="Input.CategoryId" class="text-red-600 text-sm"></span>
+
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Đăng bài</button>
+</form> 

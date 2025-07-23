@@ -1,0 +1,40 @@
+@page
+@model News_Project.Pages.SearchModel
+@{
+    ViewData["Title"] = "Tìm kiếm";
+}
+
+<div class="container mx-auto px-4 py-12 max-w-7xl">
+    <div class="max-w-2xl mx-auto mb-10">
+        <form method="get" action="/Search" class="flex items-center bg-white rounded-full shadow-lg px-4 py-2 gap-2 border border-gray-200">
+            <input type="text" name="keyword" value="@Model.Keyword" placeholder="Tìm kiếm tin tức, chủ đề..." class="flex-1 px-4 py-2 rounded-full focus:outline-none text-lg" />
+            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-700 transition">Tìm kiếm</button>
+        </form>
+    </div>
+    @if (Model.NewsList != null)
+    {
+        @if (Model.NewsList.Any())
+        {
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                @foreach (var news in Model.NewsList)
+                {
+                    var img = news.Media?.FirstOrDefault()?.Url ?? "https://placehold.co/400x200?text=No+Image";
+                    <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col h-full transition-transform duration-300 hover:scale-[1.02]">
+                        <img src="@img" alt="News" class="w-full h-48 object-cover rounded-lg mb-4" />
+                        <div class="flex justify-between items-center text-xs text-gray-500 mb-2">
+                            <span>@news.PublishedAt.ToString("dd/MM/yyyy HH:mm")</span>
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded">@news.Category?.Name</span>
+                        </div>
+                        <h2 class="text-lg font-bold mb-2 text-gray-900 hover:text-blue-600 transition-colors duration-200 line-clamp-2">@news.Title</h2>
+                        <p class="text-gray-600 mb-4 leading-relaxed line-clamp-3 prose prose-sm">@news.Summary</p>
+                        <a class="inline-block text-blue-600 font-semibold hover:text-blue-800 transition-colors duration-200 mt-auto" asp-page="/NewsDetail" asp-route-id="@news.NewsId">Xem chi tiết</a>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center text-gray-600 text-xl py-12">Không tìm thấy kết quả phù hợp.</div>
+        }
+    }
+</div> 

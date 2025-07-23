@@ -1,0 +1,44 @@
+@page
+@model News_Project.Pages.EditNewsModel
+@{
+    ViewData["Title"] = "Sửa bài viết";
+}
+
+<h1 class="text-2xl font-bold mb-6 text-blue-700">Sửa bài viết</h1>
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="mb-4 text-green-600">@Model.Message</div>
+}
+@if (Model.NewsItem != null)
+{
+    <form method="post" class="space-y-4">
+        <input type="hidden" asp-for="NewsItem.NewsId" />
+        <div>
+            <label class="block font-semibold mb-1">Tiêu đề</label>
+            <input asp-for="NewsItem.Title" class="w-full border rounded px-3 py-2" />
+        </div>
+        <div>
+            <label class="block font-semibold mb-1">Tóm tắt</label>
+            <textarea asp-for="NewsItem.Summary" class="w-full border rounded px-3 py-2"></textarea>
+        </div>
+        <div>
+            <label class="block font-semibold mb-1">Nội dung</label>
+            <textarea asp-for="NewsItem.Content" class="w-full border rounded px-3 py-2 min-h-[200px]"></textarea>
+        </div>
+        <div>
+            <label class="block font-semibold mb-1">Chuyên mục</label>
+            <select asp-for="NewsItem.CategoryId" class="w-full border rounded px-3 py-2">
+                @foreach (var cat in Model.Categories)
+                {
+                    <option value="@cat.CategoryId" selected="@(cat.CategoryId == Model.NewsItem.CategoryId ? "selected" : null)">@cat.Name</option>
+                }
+            </select>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded">Lưu thay đổi</button>
+        <a href="/AdminNews" class="ml-4 text-gray-600 hover:underline">Quay lại</a>
+    </form>
+}
+else
+{
+    <p>Không tìm thấy bài viết.</p>
+} 

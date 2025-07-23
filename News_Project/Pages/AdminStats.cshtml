@@ -1,0 +1,56 @@
+@page
+@model News_Project.Pages.AdminStatsModel
+@{
+    Layout = "~/Pages/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Thống kê quản trị";
+}
+
+@if (Model.Stats != null)
+{
+    <div class="container mx-auto px-4 py-6">
+        <!-- Summary Table -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6 max-w-2xl mx-auto">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">Tổng quan thống kê</h2>
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="p-3 border-b">Loại</th>
+                        <th class="p-3 border-b">Số lượng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-3 border-b">Tổng số người dùng</td>
+                        <td class="p-3 border-b font-bold">@Model.Stats.TotalUsers</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-3 border-b">Tổng số bài viết</td>
+                        <td class="p-3 border-b font-bold">@Model.Stats.TotalNews</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-3 border-b">Tổng số bình luận</td>
+                        <td class="p-3 border-b font-bold">@Model.Stats.TotalComments</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-3 border-b">Tổng số media</td>
+                        <td class="p-3 border-b font-bold">@Model.Stats.TotalMedia</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-3 border-b">Tổng số chuyên mục</td>
+                        <td class="p-3 border-b font-bold">@Model.Stats.TotalCategories</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-3 border-b">Tổng số tag</td>
+                        <td class="p-3 border-b font-bold">@Model.Stats.TotalTags</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        
+    </div>
+}
+else
+{
+    <p class="text-center text-gray-600">Đang tải dữ liệu...</p>
+}

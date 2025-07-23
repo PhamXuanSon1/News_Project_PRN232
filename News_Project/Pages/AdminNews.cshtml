@@ -1,0 +1,58 @@
+@page
+@model News_Project.Pages.AdminNewsModel
+@{
+    Layout = "~/Pages/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Quản lý bài viết";
+}
+
+<h1 class="text-2xl font-bold mb-6 text-blue-700">Quản lý bài viết</h1>
+<partial name="_AlertPartial" />
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="mb-4 text-green-600">@Model.Message</div>
+}
+
+@if (Model.NewsList?.Any() == true)
+{
+    <table class="min-w-full bg-white rounded-lg shadow">
+        <thead>
+            <tr>
+                <th class="px-4 py-2">ID</th>
+                <th class="px-4 py-2">Tiêu đề</th>
+                <th class="px-4 py-2">Tác giả</th>
+                <th class="px-4 py-2">Chuyên mục</th>
+                <th class="px-4 py-2">Ngày đăng</th>
+                <th class="px-4 py-2">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var news in Model.NewsList)
+        {
+            <tr>
+                <td class="border px-4 py-2">@news.NewsId</td>
+                <td class="border px-4 py-2">@news.Title</td>
+                <td class="border px-4 py-2">@news.Author?.UserName</td>
+                <td class="border px-4 py-2">@news.Category?.Name</td>
+                <td class="border px-4 py-2">@news.PublishedAt.ToString("dd/MM/yyyy")</td>
+                <td class="border px-4 py-2">
+                    <form method="post" asp-page-handler="Delete" asp-route-newsId="@news.NewsId" class="inline">
+                        <button type="submit" class="text-red-600 text-xs hover:underline bg-transparent border-none">Xóa</button>
+                    </form>
+                    <a href="/EditNews?id=@news.NewsId" class="text-blue-600 text-xs hover:underline ml-2">Sửa</a>
+                    @if (news.Status != "published")
+                    {
+                        <form method="post" asp-page-handler="Approve" asp-route-newsId="@news.NewsId" class="inline ml-2">
+                            <button type="submit" class="text-green-600 text-xs hover:underline bg-transparent border-none">Duyệt</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Không có bài viết nào.</p>
+} 

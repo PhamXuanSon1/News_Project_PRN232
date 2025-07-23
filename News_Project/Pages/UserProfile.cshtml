@@ -1,0 +1,54 @@
+@page
+@model News_Project.Pages.UserProfileModel
+@{
+    ViewData["Title"] = "Trang cá nhân";
+}
+
+<h1 class="text-2xl font-bold mb-6 text-blue-700">Trang cá nhân</h1>
+
+@if (Model.UserInfo != null)
+{
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-2">@Model.UserInfo.UserName</h2>
+        <p>Email: <span class="font-mono">@Model.UserInfo.Email</span></p>
+        <p>Ngày tạo: @Model.UserInfo.CreatedAt.ToString("dd/MM/yyyy")</p>
+        <a asp-area="Identity" asp-page="/Account/Manage/ChangePassword" class="text-blue-600 hover:underline">Đổi mật khẩu</a>
+    </div>
+}
+
+<h2 class="text-lg font-bold mb-2">Bài viết đã đăng</h2>
+@if (Model.NewsList?.Any() == true)
+{
+    <ul class="mb-6">
+        @foreach (var news in Model.NewsList)
+        {
+            <li>
+                <a class="text-blue-600 hover:underline" asp-page="/NewsDetail" asp-route-id="@news.NewsId">@news.Title</a>
+                <span class="text-gray-500 text-sm ml-2">@news.PublishedAt.ToString("dd/MM/yyyy")</span>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>Bạn chưa đăng bài viết nào.</p>
+}
+
+<h2 class="text-lg font-bold mb-2">Bình luận đã viết</h2>
+@if (Model.Comments?.Any() == true)
+{
+    <ul>
+        @foreach (var cmt in Model.Comments)
+        {
+            <li>
+                <span class="text-gray-700">@cmt.Content</span>
+                <span class="text-gray-500 text-sm ml-2">@cmt.CreatedAt.ToString("dd/MM/yyyy")</span>
+                <span class="ml-2">trên bài <a class="text-blue-600 hover:underline" asp-page="/NewsDetail" asp-route-id="@cmt.NewsId">@cmt.News?.Title</a></span>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>Bạn chưa viết bình luận nào.</p>
+} 

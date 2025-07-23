@@ -1,0 +1,61 @@
+@page
+@model News_Project.Pages.AdminMediaModel
+@{
+    ViewData["Title"] = "Quản lý media";
+}
+
+<h1 class="text-2xl font-bold mb-6 text-blue-700">Quản lý media</h1>
+<partial name="_AlertPartial" />
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="mb-4 text-green-600">@Model.Message</div>
+}
+
+<form method="post" class="mb-6 flex gap-2">
+    <input name="url" class="border rounded px-3 py-2" placeholder="URL media" />
+    <input name="type" class="border rounded px-3 py-2" placeholder="Loại (image/video)" />
+    <select name="newsId" class="border rounded px-3 py-2">
+        <option value="">-- Chọn bài viết --</option>
+        @foreach (var news in Model.NewsList)
+        {
+            <option value="@news.NewsId">@news.Title</option>
+        }
+    </select>
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Thêm</button>
+</form>
+
+@if (Model.MediaList?.Any() == true)
+{
+    <table class="min-w-full bg-white rounded-lg shadow">
+        <thead>
+            <tr>
+                <th class="px-4 py-2">ID</th>
+                <th class="px-4 py-2">URL</th>
+                <th class="px-4 py-2">Loại</th>
+                <th class="px-4 py-2">Bài viết</th>
+                <th class="px-4 py-2">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var media in Model.MediaList)
+        {
+            <tr>
+                <td class="border px-4 py-2">@media.MediaId</td>
+                <td class="border px-4 py-2">@media.Url</td>
+                <td class="border px-4 py-2">@media.Type</td>
+                <td class="border px-4 py-2">@media.News?.Title</td>
+                <td class="border px-4 py-2">
+                    <form method="post" asp-page-handler="Delete" asp-route-mediaId="@media.MediaId" class="inline">
+                        <button type="submit" class="text-red-600 text-xs hover:underline bg-transparent border-none">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Không có media nào.</p>
+} 

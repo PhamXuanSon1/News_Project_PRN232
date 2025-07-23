@@ -1,0 +1,124 @@
+@page "{id:int}"
+@model News_Project.Pages.NewsDetailModel
+@using System.Globalization
+@{
+    ViewData["Title"] = Model.News?.Title ?? "Chi tiết tin";
+}
+
+@if (Model.News == null)
+{
+    <div class="container mx-auto px-4 py-12 text-center text-red-600 text-xl">Không tìm thấy bài viết.</div>
+}
+else
+{
+    <div class="container mx-auto px-4 py-12 max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Sidebar trái -->
+        <aside class="lg:col-span-3 space-y-6 hidden lg:block">
+            <div class="bg-white rounded-xl shadow-lg p-6 transition-transform duration-300 hover:scale-[1.02]">
+                <h3 class="font-bold text-lg mb-4 text-gray-900">TÓM TẮT</h3>
+                <p class="text-gray-600 text-sm mb-4 leading-relaxed">@Model.News.Summary</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="font-bold text-lg mb-4 text-gray-900">TIN TỨC THẾ GIỚI</h3>
+                <ul class="space-y-3 text-gray-800 text-sm">
+                    @foreach (var tag in Model.TagList.Take(3))
+                    {
+                        <li class="hover:text-blue-600 transition-colors duration-200">@tag.Name</li>
+                    }
+                </ul>
+            </div>
+        </aside>
+        <!-- Nội dung chính -->
+        <main class="lg:col-span-6 bg-white rounded-xl shadow-lg p-8">
+            <h1 class="text-3xl font-bold mb-4 text-gray-900 hover:text-blue-600 transition-colors duration-200">@Model.News.Title</h1>
+            <div class="flex flex-wrap items-center text-sm text-gray-500 mb-6 gap-3">
+                <span>Đăng ngày @Model.News.PublishedAt.ToString("MMM dd, yyyy HH:mm", CultureInfo.InvariantCulture)</span>
+                <span class="ml-auto bg-blue-100 text-blue-800 px-2 py-1 rounded uppercase">@Model.News.Category?.Name</span>
+            </div>
+            <div class="flex items-center gap-3 mb-6">
+                <span class="text-gray-600 text-sm font-semibold">Chia sẻ</span>
+                <a href="#" class="text-blue-600 hover:text-blue-800 transition-colors duration-200"><i class="fab fa-facebook fa-lg"></i></a>
+                <a href="#" class="text-blue-400 hover:text-blue-600 transition-colors duration-200"><i class="fab fa-twitter fa-lg"></i></a>
+                <a href="#" class="text-green-500 hover:text-green-700 transition-colors duration-200"><i class="fab fa-whatsapp fa-lg"></i></a>
+                <a href="#" class="text-pink-500 hover:text-pink-700 transition-colors duration-200"><i class="fab fa-instagram fa-lg"></i></a>
+            </div>
+            @if (Model.MediaList?.Any() == true)
+            {
+                <img src="@Model.MediaList.First().Url" alt="media" class="w-full h-96 object-cover rounded-lg mb-6" />
+            }
+            <div class="prose prose-lg max-w-none mb-6 text-gray-900 leading-relaxed">@Html.Raw(Model.News.Content)</div>
+            <div class="text-gray-700 text-sm mb-4">
+                TÁC GIẢ <span class="font-semibold">@Model.News.Author?.UserName</span>
+            </div>
+            <div class="text-sm text-gray-500 mb-2 font-semibold">ĐĂNG KÝ NHẬN TIN TỨC</div>
+            <div class="border-t pt-2 text-sm text-gray-400">ĐÓNG BÀI VIẾT</div>
+        </main>
+        <!-- Sidebar phải: Most Popular -->
+        <aside class="lg:col-span-3 space-y-6">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="font-bold text-lg mb-4 text-gray-900">TIN PHỔ BIẾN</h3>
+                <ol class="list-decimal list-inside space-y-3 text-gray-800">
+                    @foreach (var news in Model.Top10News)
+                    {
+                        <li><a href="/NewsDetail/@news.NewsId" class="hover:text-blue-600 transition-colors duration-200">@news.Title</a></li>
+                    }
+                </ol>
+            </div>
+        </aside>
+    </div>
+    <!-- Bình luận -->
+    <div class="container mx-auto px-4 py-8 md:px-0 md:w-2/3">
+        <section class="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4 text-gray-900">Bình luận</h2>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form method="post" class="mb-6 flex gap-3">
+                    <input type="hidden" name="id" value="@Model.News.NewsId" />
+                    <input name="commentContent" class="border border-gray-300 rounded-lg px-4 py-2 flex-1 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Viết bình luận..." />
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">Gửi</button>
+                </form>
+                @if (!string.IsNullOrEmpty(Model.CommentMessage))
+                {
+                    <div class="mb-4 text-green-600 text-sm">@Model.CommentMessage</div>
+                }
+            }
+            else
+            {
+                <div class="mb-4 text-gray-500 text-sm">Bạn cần <a asp-area="Identity" asp-page="/Account/Login" class="text-blue-600 hover:text-blue-800 font-semibold transition-colors duration-200">đăng nhập</a> để bình luận.</div>
+            }
+            @if (Model.Comments?.Any() == true)
+            {
+                <ul class="space-y-4">
+                    @foreach (var cmt in Model.Comments)
+                    {
+                        <li class="border-b pb-3">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span class="font-semibold text-gray-900">@cmt.User?.UserName</span>:
+                                    <span class="text-gray-700">@cmt.Content</span>
+                                </div>
+                                <span class="text-xs text-gray-400">@cmt.CreatedAt.ToString("dd/MM/yyyy HH:mm")</span>
+                            </div>
+                            @if (User.Identity.IsAuthenticated && cmt.UserId == Model.CurrentUserId)
+                            {
+                                <form method="post" asp-page-handler="DeleteComment" asp-route-commentId="@cmt.CommentId" class="inline">
+                                    <button type="submit" class="text-red-600 text-xs hover:text-red-800 font-semibold transition-colors duration-200 bg-transparent border-none">Xóa</button>
+                                </form>
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="text-gray-500 text-sm">Chưa có bình luận nào.</p>
+            }
+        </section>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        // Add any future JavaScript functionality here
+    </script>
+}

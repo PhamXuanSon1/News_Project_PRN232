@@ -1,0 +1,63 @@
+@page
+@model News_Project.Pages.AdminUsersModel
+@{
+    Layout = "~/Pages/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Quản lý người dùng";
+}
+
+<h1 class="text-2xl font-bold mb-6 text-blue-700">Quản lý người dùng</h1>
+<partial name="_AlertPartial" />
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="mb-4 text-green-600">@Model.Message</div>
+}
+
+@if (Model.Users?.Any() == true)
+{
+    <table class="min-w-full bg-white rounded-lg shadow">
+        <thead>
+            <tr>
+                <th class="px-4 py-2">ID</th>
+                <th class="px-4 py-2">Username</th>
+                <th class="px-4 py-2">Email</th>
+                <th class="px-4 py-2">Role</th>
+                <th class="px-4 py-2">Ngày tạo</th>
+                <th class="px-4 py-2">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td class="border px-4 py-2">@user.Id</td>
+                <td class="border px-4 py-2">@user.UserName</td>
+                <td class="border px-4 py-2">@user.Email</td>
+                <td class="border px-4 py-2">
+                    <form method="post" asp-page-handler="ChangeRole" class="flex gap-2 items-center">
+                        <input type="hidden" name="userId" value="@user.Id" />
+                        <select name="role" class="border rounded px-2 py-1">
+                            <option value="user" selected="@(user.Role == "user" ? "selected" : null)">user</option>
+                            <option value="editor" selected="@(user.Role == "editor" ? "selected" : null)">editor</option>
+                            <option value="admin" selected="@(user.Role == "admin" ? "selected" : null)">admin</option>
+                        </select>
+                        <button type="submit" class="bg-blue-600 text-white px-2 py-1 rounded text-xs">Đổi</button>
+                    </form>
+                </td>
+                <td class="border px-4 py-2">@user.CreatedAt.ToString("dd/MM/yyyy")</td>
+                <td class="border px-4 py-2">
+                    <form method="post" asp-page-handler="ToggleLock" asp-route-userId="@user.Id" class="inline">
+                        <button type="submit" class="text-xs px-2 py-1 rounded @((user.LockoutEnabled ? "bg-red-500 text-white" : "bg-green-500 text-white"))">
+                            @(user.LockoutEnabled ? "Mở" : "Khóa")
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Không có user nào.</p>
+} 

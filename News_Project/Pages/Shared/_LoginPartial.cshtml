@@ -1,0 +1,22 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<News_Project.Models.User> SignInManager
+@inject UserManager<News_Project.Models.User> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var user = await UserManager.GetUserAsync(User);
+    <div class="flex items-center gap-2">
+        <span class="text-sm">Xin chào, <b>@user.UserName</b>!</span>
+        <span class="text-xs px-2 py-1 rounded bg-gray-200 text-gray-700">@user.Role</span>
+        <form method="post" asp-area="Identity" asp-page="/Account/Logout" class="inline">
+            <button type="submit" class="text-red-600 text-xs hover:underline bg-transparent border-none">Đăng xuất</button>
+        </form>
+    </div>
+}
+else
+{
+    <div class="flex items-center gap-2">
+        <a asp-area="Identity" asp-page="/Account/Login" class="text-blue-600 hover:underline text-sm">Đăng nhập</a>
+        <a asp-area="Identity" asp-page="/Account/Register" class="text-blue-600 hover:underline text-sm">Đăng ký</a>
+    </div>
+}
